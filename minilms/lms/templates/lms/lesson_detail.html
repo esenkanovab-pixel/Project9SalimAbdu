@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }}{% endblock %}
+
+{% block content %}
+    <a href="{% url 'lms:courses_list' %}" class="btn btn-outline-secondary mb-3">← Назад к курсам</a>
+    <h1>📖 Урок: {{ lesson.title }}</h1>
+    <span class="badge bg-info text-dark">{{ lesson.course.title }}</span>
+
+    <div class="card p-4 mt-3">
+        <h4>Содержание</h4>
+        <p>{{ lesson.content|linebreaks }}</p>
+
+        {% if lesson.materials %}
+            <p>
+                <strong>Материалы:</strong> 
+                <a href="{{ lesson.materials.url }}" class="btn btn-sm btn-warning">Скачать файл</a>
+            </p>
+        {% endif %}
+    </div>
+
+    <hr>
+    
+    <h3 class="mt-4">Домашнее задание</h3>
+    <a href="{% url 'lms:homework_submit' lesson.id %}" class="btn btn-primary">Отправить Д/З</a>
+    
+    <h4 class="mt-3">Отправки:</h4>
+    {% if lesson.submissions.exists %}
+        <ul class="list-group">
+        {% for hw in lesson.submissions.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ hw.student.name }} 
+                <span class="badge bg-{% if hw.status == 'accepted' %}success{% elif hw.status == 'rejected' %}danger{% else %}warning{% endif %}">
+                    {{ hw.get_status_display }}
+                </span>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Пока нет отправленных домашних заданий.</p>
+    {% endif %}
+
+{% endblock %}

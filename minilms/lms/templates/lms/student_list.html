@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Список студентов{% endblock %}
+
+{% block content %}
+    <h1>👤 Список студентов</h1>
+    <a class="btn btn-success mb-3" href="{% url 'lms:student_create' %}">Добавить студента</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Email</th>
+                <th>Курсы</th>
+                <th>Сертификаты</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+            <tr>
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>
+                    {% for course in student.courses.all %}
+                        <div class="my-1">
+                            {{ course.title }} 
+                            {% if not student.certificates|dict_list_course:course %}
+                                <a href="{% url 'lms:generate_certificate' course.id student.id %}" class="btn btn-sm btn-info ms-2">Сгенерировать</a>
+                            {% else %}
+                                <span class="badge bg-success">Сертификат готов</span>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <span class="text-muted">Не записан ни на один курс</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for cert in student.certificates.all %}
+                        <a href="{{ cert.pdf.url }}" target="_blank" class="btn btn-sm btn-outline-primary m-1">{{ cert.course.title }} (PDF)</a>
+                    {% empty %}
+                        Нет
+                    {% endfor %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">Нет зарегистрированных студентов.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

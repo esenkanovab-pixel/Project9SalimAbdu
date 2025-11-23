@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Отправить Д/З для {{ lesson.title }}{% endblock %}
+
+{% block content %}
+    <h2>📤 Отправить Д/З для урока: {{ lesson.title }}</h2>
+    <p class="text-muted">Курс: {{ lesson.course.title }}</p>
+
+    <form method="post" enctype="multipart/form-data" class="card p-4">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+          <label for="student_select" class="form-label">Студент (Выберите себя):</label>
+          <select name="student_id" id="student_select" class="form-select">
+            {% for s in students %}
+              <option value="{{ s.id }}">{{ s.name }} ({{ s.email }})</option>
+            {% empty %}
+              <option value="" disabled>Нет студентов на этом курсе</option>
+            {% endfor %}
+          </select>
+          <div class="form-text">Обратите внимание: для корректной отправки вы должны быть записаны на курс.</div>
+      </div>
+      
+      {{ form.as_p }}
+      
+      <button type="submit" class="btn btn-primary">Отправить работу</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ student.name|default:"Создать студента" }}{% endblock %}
+
+{% block content %}
+    <h2>➕ {{ student.name|default:"Добавить нового студента" }}</h2>
+
+    <form method="post" class="card p-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+        <a href="{% url 'lms:students_list' %}" class="btn btn-secondary mt-2">Отмена</a>
+    </form>
+{% endblock %}

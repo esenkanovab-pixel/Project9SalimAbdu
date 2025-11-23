@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Создать урок{% endblock %}
+
+{% block content %}
+    <h2>➕ Добавить новый урок</h2>
+
+    <form method="post" enctype="multipart/form-data" class="card p-4">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary mt-3">Сохранить урок</button>
+      <a href="{% url 'lms:courses_list' %}" class="btn btn-secondary mt-2">Отмена</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Список курсов{% endblock %}
+
+{% block content %}
+    <h1>📚 Список курсов</h1>
+    <a class="btn btn-success mb-3" href="{% url 'lms:course_create' %}">Новый курс</a>
+
+    <ul class="list-group">
+      {% for c in courses %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ c.title }}</strong> 
+                <span class="badge bg-secondary">{{ c.teacher }}</span>
+                <p class="mb-0 text-muted">{{ c.description|truncatechars:100 }}</p>
+                <small>Студентов: {{ c.students.count }} | Уроков: {{ c.lessons.count }}</small>
+            </div>
+            <div>
+                <a href="{% url 'lms:course_edit' c.id %}" class="btn btn-sm btn-outline-primary">Редактировать</a>
+            </div>
+        </li>
+        {% for lesson in c.lessons.all %}
+            <li class="list-group-item list-group-item-action py-1 ps-5">
+                <a href="{% url 'lms:lesson_detail' lesson.id %}">{{ lesson.title }}</a>
+            </li>
+        {% empty %}
+            <li class="list-group-item list-group-item-warning py-1 ps-5">Уроков пока нет.</li>
+        {% endfor %}
+      {% empty %}
+        <li class="list-group-item list-group-item-danger">Нет курсов</li>
+      {% endfor %}
+    </ul>
+{% endblock %}

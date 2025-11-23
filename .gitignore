@@ -1,0 +1,2 @@
+# Python
+*.pyc pycache/ .env venv/ env/ .vscode/
